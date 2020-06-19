@@ -1,0 +1,56 @@
+https://www.digicert.com/kb/csr-ssl-installation/tomcat-keytool.htm
+
+Create CSR & Install SSL/TLS Certificate (Keytool)
+
+Step 1: Use Keytool to Create a New Keystore
+
+	Enter the command below:
+		
+		keytool -genkey -alias <keyname> -keyalg RSA -keysize 2048 -keystore <your_site_name>.jks
+		 		 
+		In the command above, your_site_name should be the name of the domain you want to secure with 			this SSL/TLS certificate. When ordering a Wildcard certificate, do not include the asterisk (*) 			in the filename (e.g., your_site_name). The asterisk is not a valid keytool character.
+
+		When prompted, create a password for your keystore
+	
+	Enter yourr SSL/TLS certificate information
+		
+		When prompted for the first and last name, DO NOT type your first and last name. Instead, type
+		the Fully Qualified Domain name FQDN for the site you are securing with this certificate
+		(e.g. www.yourdomain.com, mail.yourdomain.com)
+		Are you ordering a Wildcard Certificate? Then your FQDN must begin with asterisk (*)
+		(eg. *.yourdomain.com)
+		
+		Enter your Organization information 
+		When prompted to verify your information, type y or yes to confirm
+		When asked for a "key password for <keyname>", press enter to use the password you just created 
+		for the keystore file
+		
+	Your keystore file, <your_site_name>.jks, is now created in your current working directory
+	
+2. Generate a Certificate Signing Request (CS) from your New Keystore
+
+	In Keytool, type the following command:
+	
+		keytool -certreq -alias server -file csr.txt -keystore your_site_name.jks
+		
+	When prompted, enter the password you created earlier(when you created your new keystore).
+	
+	In your current directory, csr.txt (e.g., your_site_domain.txt) now contains your CSR.
+	
+	Save and Back-up your Keystore file
+
+3. Install the Certificate File in your Keystore
+
+	Important: You must install the SSL/TLS Certificate file to the same keystore and under the same alias 		name (e.g., "-alias server") that you used to generate your CSR. If you try to install the certificate 		to a different keystore or under a different alias, the import command will not work.	
+	
+	Run the command below to import the certificate into your keystore
+	
+		keytool -import -alias server -file your_site_name.p7b -keystore your_site_name.jks
+		
+	In the command above, your_site_name.p7b should be the name of the certificate file you downloaded	
+	
+	You should get a confirmation that the "Certificate reply was installed in keystore".
+	
+	If you are prompted to trust the certificate, type y or yes.
+	
+	The installation of this file loads all necessary certificates to your keystore.
